@@ -4,6 +4,8 @@ const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
+const authRouter = require('./routes/Auth.router');
+
 const connectDB = async () => {
     try {
         await mongoose.connect(
@@ -21,6 +23,8 @@ connectDB();
 // middleware
 app.use(express.json());
 app.use(morgan("common"));
+
+app.use("/api/auth", authRouter);
 
 const port = 5000;
 app.listen(process.env.PORT || port, () => {
