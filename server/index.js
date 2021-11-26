@@ -1,11 +1,28 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const morgan = require('morgan');
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-});
+const connectDB = async () => {
+    try {
+        await mongoose.connect(
+            `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@e-commerce.a51mo.mongodb.net/E-commerce?retryWrites=true&w=majority`
+        )
+        console.log('MongoDB connected');
+    } catch (error) {
+        console.log(error);
+        process.exit(1);
+    }
+}
+
+connectDB();
+
+// middleware
+app.use(express.json());
+app.use(morgan("common"));
 
 const port = 5000;
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
     console.log(`Server running at http://localhost:${port}`)
 });
