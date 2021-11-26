@@ -58,7 +58,7 @@ router.post("/login", async (req, res) => {
             }
         );
 
-        const { password, ...orthers } = user._doc;
+        const { password, _id, email, isAdmin, createdAt, updatedAt, __v, ...orthers } = user._doc;
         res.status(200).json({ ...orthers, accessToken });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error' });
