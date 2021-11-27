@@ -21,4 +21,22 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
+// @router api/products/:id
+// @desc PUT products
+// @access Private
+router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id, 
+            {
+                $set: req.body,
+            },
+            { new: true }
+        );
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 module.exports = router;
