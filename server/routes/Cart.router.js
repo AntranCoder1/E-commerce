@@ -7,7 +7,7 @@ const {
     verifyTokenAndAuthorization
 } = require('../verifyToken');
 
-// @router appi/carts
+// @router api/carts
 // @desc POST carts
 // @access Private
 router.post("/", verifyToken, async (req, res) => {
@@ -15,6 +15,24 @@ router.post("/", verifyToken, async (req, res) => {
     try {
         const savedCart = await newCart.saved();
         res.status(200).json(savedCart);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// @router api/cart/:id
+// @desc PUT carts
+// @access Private
+router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+    try {
+        const updatedCart = await Cart.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: req.body,
+            },
+            { new: true }
+        )
+        res.status(200).json(updatedCart);
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
