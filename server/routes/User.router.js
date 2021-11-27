@@ -57,4 +57,19 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
+// @router api/users/
+// @desc GET ALL users
+// @access Private
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+    const query = req.query.new;
+    try {
+        const users = query ? 
+            await User.find().sort({ _id: -1 }).limit(5) : 
+            await User.find();
+        res.status(200).json(users);
+    } catch (error) {
+        res.sendStatus(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 module.exports = router;
