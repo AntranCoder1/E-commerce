@@ -50,4 +50,16 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
+// @router api/orders/find/:userId
+// @desc GET user order
+// @access Private
+router.get("/find/:userId", verifyTokenAndAdmin, async (req, res) => {
+    try {
+        const order = await Order.findById({ userId: req.params.userId });
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 module.exports = router;
