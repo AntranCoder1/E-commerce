@@ -39,4 +39,16 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
+// @router api/products/:id
+// @desc DELETE products
+// @access Private
+router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id);
+        res.status(200).json('Product has been deleted...');
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 module.exports = router;
