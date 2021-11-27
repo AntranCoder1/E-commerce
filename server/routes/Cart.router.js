@@ -50,4 +50,17 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
     }
 });
 
+// @router api/carts/find/:userId
+// @desc GET user cart
+// @access Private
+router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
+    try {
+        const getCart = await Cart.findById({ userId: req.params.userId });
+        res.status(200).json(getCart);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+
 module.exports = router;
