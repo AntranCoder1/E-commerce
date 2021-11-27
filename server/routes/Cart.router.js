@@ -55,12 +55,23 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
 // @access Private
 router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
     try {
-        const getCart = await Cart.findById({ userId: req.params.userId });
-        res.status(200).json(getCart);
+        const cart = await Cart.findById({ userId: req.params.userId });
+        res.status(200).json(cart);
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
 
+// @router api/carts/
+// @desc GET All carts
+// @access Private
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+    try {
+        const carts = await Cart.find();
+        res.status(200).json(carts);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 module.exports = router;
