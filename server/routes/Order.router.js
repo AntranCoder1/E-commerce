@@ -62,4 +62,16 @@ router.get("/find/:userId", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
+// @router api/orders/
+// @desc GET all orders
+// @access Private
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+    try {
+        const orders = await Order.find();
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 module.exports = router;
