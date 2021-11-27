@@ -20,7 +20,7 @@ router.post("/", verifyToken, async (req, res) => {
     }
 });
 
-// @router api/cart/:id
+// @router api/carts/:id
 // @desc PUT carts
 // @access Private
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
@@ -33,6 +33,18 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
             { new: true }
         )
         res.status(200).json(updatedCart);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// @router api/carts/:id
+// @desc DELETE carts
+// @access Private
+router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
+    try {
+        await Cart.findByIdAndDelete(req.params.id);
+        res.status(200).json('A product has been removed from the cart...');
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
