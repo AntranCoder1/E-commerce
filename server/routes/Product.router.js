@@ -56,8 +56,8 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 // @access Private
 router.get("/find/:id", async (req, res) => {
     try {
-        const getProduct = await Product.findById(req.params.id);
-        res.status(200).json(getProduct);
+        const product = await Product.findById(req.params.id);
+        res.status(200).json(product);
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
