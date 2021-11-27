@@ -8,6 +8,7 @@ const authRouter = require('./routes/Auth.router');
 const userRouter = require('./routes/User.router');
 const productRouter = require('./routes/Product.router');
 const cartRouter = require('./routes/Cart.router');
+const orderRouter = require('./routes/Order.router');
 
 const connectDB = async () => {
     try {
@@ -31,6 +32,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
+app.use("/api/orders", orderRouter);
 
 const port = 5000;
 app.listen(process.env.PORT || port, () => {
