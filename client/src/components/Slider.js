@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { ArrowLeftOutlined, ArrowRightOutlined, Style } from "@material-ui/icons";
+import { ArrowLeftOutlined, ArrowRightOutlined } from "@material-ui/icons";
+import { useState } from "react";
 import styled from "styled-components";
-import { sliderItems } from '../data';
+import { sliderItems } from "../data";
 
 const Container = styled.div`
     width: 100%;
@@ -22,8 +22,8 @@ const Arrow = styled.div`
     position: absolute;
     top: 0;
     bottom: 0;
-    left: ${props => props.direction === "left" && "10px"};
-    right: ${props => props.direction === "right" && "10px"};
+    left: ${(props) => props.direction === "left" && "10px"};
+    right: ${(props) => props.direction === "right" && "10px"};
     margin: auto;
     cursor: pointer;
     opacity: 0.5;
@@ -34,7 +34,7 @@ const Wrapper = styled.div`
     height: 100%;
     display: flex;
     transition: all 1.5s ease;
-    transform: translateX(${props => props.slideIndex * -100}vw);
+    transform: translateX(${(props) => props.slideIndex * -100}vw);
 `;
 
 const Slide = styled.div`
@@ -42,6 +42,7 @@ const Slide = styled.div`
     height: 100vh;
     display: flex;
     align-items: center;
+    background-color: #${(props) => props.bg};
 `;
 
 const ImgContainer = styled.div`
@@ -77,7 +78,6 @@ const Button = styled.button`
 `;
 
 const Slider = () => {
-
     const [slideIndex, setSlideIndex] = useState(0);
 
     const handleClick = (direction) => {
@@ -86,7 +86,7 @@ const Slider = () => {
         } else {
             setSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0);
         }
-    }
+    };
 
     return (
         <Container>
@@ -94,7 +94,7 @@ const Slider = () => {
                 <ArrowLeftOutlined />
             </Arrow>
             <Wrapper slideIndex={slideIndex}>
-                { sliderItems.map(item => (
+                {sliderItems.map((item) => (
                     <Slide bg={item.bg} key={item.id}>
                         <ImgContainer>
                             <Image src={item.img} />
@@ -105,13 +105,13 @@ const Slider = () => {
                             <Button>SHOW NOW</Button>
                         </InfoContainer>
                     </Slide>
-                )) }
+                ))}
             </Wrapper>
             <Arrow direction="right" onClick={() => handleClick("right")}>
                 <ArrowRightOutlined />
             </Arrow>
         </Container>
-    )
-}
+    );
+};
 
-export default Slider
+export default Slider;
