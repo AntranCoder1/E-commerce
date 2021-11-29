@@ -3,12 +3,14 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const authRouter = require('./routes/Auth.router');
 const userRouter = require('./routes/User.router');
 const productRouter = require('./routes/Product.router');
 const cartRouter = require('./routes/Cart.router');
 const orderRouter = require('./routes/Order.router');
+const stripeRouter = require('./routes/Stripe');
 
 const connectDB = async () => {
     try {
@@ -25,6 +27,7 @@ const connectDB = async () => {
 connectDB();
 
 // middleware
+app.use(cors());
 app.use(express.json());
 app.use(morgan("common"));
 
@@ -33,6 +36,7 @@ app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/checkout", stripeRouter);
 
 const port = 5000;
 app.listen(process.env.PORT || port, () => {
