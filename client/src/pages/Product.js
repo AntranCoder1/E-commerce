@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Add, Remove } from "@material-ui/icons";
 import Announcement from "../components/Announcement";
@@ -6,6 +6,8 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
 import { mobile } from '../responsive';
+import { useLocation } from 'react-router-dom';
+import { publicRequest } from '../requestMethod';
 
 const Container = styled.div``;
 
@@ -91,6 +93,7 @@ const AmountContainer = styled.div`
     display: flex;
     font-weight: 700;
     align-items: center;
+    cursor: pointer;
 `;
 
 const Amount = styled.span`
@@ -117,47 +120,78 @@ const Button = styled.button`
 `;
 
 const Product = () => {
+
+    const location = useLocation();
+    const id = location.pathname.split("/")[2];
+
+    const [products, setProducts] = useState({});
+    const [quantity, setQuantity] = useState(1);
+    const [color, setColor] = useState("");
+    const [size, setSize] = useState("");   
+
+    useEffect(() => {
+        const getProduct = async () => {
+            try {
+                const res = await publicRequest.get("/products/find/" + id);
+                setProducts(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getProduct();
+    }, [id]);
+
+    const handleQuantity = (quan) => {
+        if (quan === "dec") {
+            setQuantity(quantity <= 1 ? quantity : quantity - 1);
+        } else if (quan === "inc") {
+            setQuantity(quantity  + 1);
+        }
+    }
+
     return (
         <Container>
             <Navbar />
             <Announcement />
             <Wrapper>
                 <ImgContainer>
-                    <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
+                    <Image src={products.img} />
                 </ImgContainer>
                 <InfoContainer>
-                    <Title>Denim Jumpsuit</Title>
+                    <Title>{products.title}</Title>
                     <Desc>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                        venenatis, dolor in finibus malesuada, lectus ipsum porta nunc, at
-                        iaculis arcu nisi sed mauris. Nulla fermentum vestibulum ex, eget
-                        tristique tortor pretium ut. Curabitur elit justo, consequat id
-                        condimentum ac, volutpat ornare.
+                        {products.desc}
                     </Desc>
-                    <Price>$ 20</Price>
+                    <Price>{products.price} đ</Price>
                     <FilterContainer>
                         <Filter>
                             <FilterTitle>Color</FilterTitle>
-                            <FilterColor color="black" />
-                            <FilterColor color="darkblue" />
-                            <FilterColor color="gray" />
+                            {
+                                products.color?.map(item => (
+                                    <FilterColor 
+                                        color={item} 
+                                        key={item} 
+                                        onClick={() => setColor(item)}
+                                    />
+                                ))
+                            }
                         </Filter>
                         <Filter>
                             <FilterTitle>Size</FilterTitle>
-                            <FilterSize>
-                                <FilterSizeOption>XS</FilterSizeOption>
-                                <FilterSizeOption>S</FilterSizeOption>
-                                <FilterSizeOption>M</FilterSizeOption>
-                                <FilterSizeOption>L</FilterSizeOption>
-                                <FilterSizeOption>XL</FilterSizeOption>
+                            <FilterSize onChange={(e) => setSize(e.target.value)}>
+                                { 
+                                    products.size?.map(item => 
+                                        <FilterSizeOption key={item}>{item}</FilterSizeOption>
+                                    )
+                                }
                             </FilterSize>
                         </Filter>
                     </FilterContainer>
                     <AddContainer>
                         <AmountContainer>
-                            <Remove />
-                            <Amount>1</Amount>
-                            <Add />
+                            <Remove onClick={() => handleQuantity("dec")} />
+                            <Amount>{quantity}</Amount>
+                            <Add onClick={() => handleQuantity("inc")} />
                         </AmountContainer>
                         <Button>ADD TO CART</Button>
                     </AddContainer>
