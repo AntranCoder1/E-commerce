@@ -71,6 +71,7 @@ const MenuItem = styled.div`
 const Navbar = () => {
 
     const quantity = useSelector(state => state.cart.quantity);
+    const user= useSelector(state => state.user.currentUser);
 
     return (
         <Container>
@@ -86,8 +87,21 @@ const Navbar = () => {
                     <Logo>ANTRAN.</Logo>
                 </Center>
                 <Right>
-                    <MenuItem>REGISTER</MenuItem>
-                    <MenuItem>SIGN IN</MenuItem>
+                    { user ? (
+                        <>
+                            <MenuItem style={{ textTransform: "uppercase" }}>{user.username}</MenuItem>
+                            <MenuItem>LOGOUT</MenuItem>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/register">
+                                <MenuItem>REGISTER</MenuItem>
+                            </Link>
+                            <Link to="/login">
+                                <MenuItem>SIGN IN</MenuItem>
+                            </Link>
+                        </>
+                    ) }
                     <Link to="/cart">
                         <MenuItem>
                             <Badge badgeContent={quantity} color="primary">
