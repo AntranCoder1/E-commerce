@@ -5,6 +5,7 @@ import Product from './pages/Product';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Cart from './pages/Cart';
+import Success from './pages/Success';
 import {
   BrowserRouter as Router,
   Switch,
@@ -30,6 +31,9 @@ function App() {
         </Route>
         <Route exact path="/cart">
           <Cart />
+        </Route>
+        <Route exact path="/success">
+          <Success />
         </Route>
         <Route exact path="/login">
           { user ? <Redirect to="/" /> : <Login /> }

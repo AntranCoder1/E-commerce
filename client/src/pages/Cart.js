@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Add, Remove } from "@material-ui/icons";
 import Announcement from "../components/Announcement";
@@ -7,6 +7,11 @@ import Navbar from "../components/Navbar";
 import { mobile } from "../responsive";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import StripeCheckout from 'react-stripe-checkout';
+import { useHistory } from 'react-router';
+import { userRequset } from '../requestMethod';
+
+const KEY = "pk_test_51HhCMCGDnXAv257tETY5mKu2JcrnZ3wALPQRgvSINmG5RSX1mm0kMrmjGrFELZEpyhuixC3BerJTnvKQ2eLDhfOO000MqRpSUM";
 
 const Container = styled.div``;
 
@@ -153,13 +158,35 @@ const Button = styled.button`
     background-color: black;
     color: white;
     font-weight: 600;
+    cursor: pointer;
 `;
 
 const Cart = () => {
 
     const cart = useSelector(state => state.cart);
 
-    console.log(cart);
+    const [stripeToken, setStripeToken] = useState(null);
+
+    const history = useHistory();
+
+    const onToken = (token) => {
+        setStripeToken(token)
+    }
+
+    useEffect(() => {
+        const makeRequest = async () => {
+            try {
+                const res = await userRequset.post("/checkout/payment", {
+                    tokenId: stripeToken.id,
+                    amount: 500,
+                });
+                history.push("/success", {
+                    stripeData: res.data
+                })
+            } catch (error) {}
+        }
+        stripeToken && makeRequest();
+    }, [stripeToken, cart.total, history]);
 
     return (
         <Container>
@@ -225,7 +252,18 @@ const Cart = () => {
                             <SummaryItemText>Total</SummaryItemText>
                             <SummaryItemPrice>{cart.total} Đ</SummaryItemPrice>
                         </SummaryItem>
-                        <Button>CHECKOUT NOW</Button>
+                        <StripeCheckout
+                            name="antran Shop"
+                            image="https://scontent.fsgn5-6.fna.fbcdn.net/v/t1.6435-9/84153139_819108368603777_2407690754114715648_n.jpg?_nc_cat=108&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=V8WgodyREZYAX_GqMZ3&_nc_ht=scontent.fsgn5-6.fna&oh=8cf1a169084879c98389aeff1ede754d&oe=61CE554F"
+                            billingAddress
+                            shippingAddress
+                            description={`Your total is $${cart.total}`}
+                            amount={cart.total * 100}
+                            token={onToken}
+                            stripeKey={KEY}
+                        >
+                            <Button>CHECKOUT NOW</Button>
+                        </StripeCheckout>
                     </Summary>
                 </Bottom>
             </Wrapper>
