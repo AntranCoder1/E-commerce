@@ -8,6 +8,8 @@ import Newsletter from "../components/Newsletter";
 import { mobile } from '../responsive';
 import { useLocation } from 'react-router-dom';
 import { publicRequest } from '../requestMethod';
+import { addProduct } from '../redux/CartRedux';
+import { useDispatch } from 'react-redux';
 
 const Container = styled.div``;
 
@@ -124,16 +126,17 @@ const Product = () => {
     const location = useLocation();
     const id = location.pathname.split("/")[2];
 
-    const [products, setProducts] = useState({});
+    const [product, setProduct] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState("");
     const [size, setSize] = useState("");   
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const getProduct = async () => {
             try {
                 const res = await publicRequest.get("/products/find/" + id);
-                setProducts(res.data);
+                setProduct(res.data);
             } catch (error) {
                 console.log(error);
             }
@@ -149,25 +152,31 @@ const Product = () => {
         }
     }
 
+    const handleClick = () => {
+        dispatch(
+            addProduct({ ...product, quantity, size, color })
+        )
+    }
+
     return (
         <Container>
             <Navbar />
             <Announcement />
             <Wrapper>
                 <ImgContainer>
-                    <Image src={products.img} />
+                    <Image src={product.img} />
                 </ImgContainer>
                 <InfoContainer>
-                    <Title>{products.title}</Title>
+                    <Title>{product.title}</Title>
                     <Desc>
-                        {products.desc}
+                        {product.desc}
                     </Desc>
-                    <Price>{products.price} đ</Price>
+                    <Price>{product.price} đ</Price>
                     <FilterContainer>
                         <Filter>
                             <FilterTitle>Color</FilterTitle>
                             {
-                                products.color?.map(item => (
+                                product.color?.map(item => (
                                     <FilterColor 
                                         color={item} 
                                         key={item} 
@@ -180,7 +189,7 @@ const Product = () => {
                             <FilterTitle>Size</FilterTitle>
                             <FilterSize onChange={(e) => setSize(e.target.value)}>
                                 { 
-                                    products.size?.map(item => 
+                                    product.size?.map(item => 
                                         <FilterSizeOption key={item}>{item}</FilterSizeOption>
                                     )
                                 }
@@ -193,7 +202,7 @@ const Product = () => {
                             <Amount>{quantity}</Amount>
                             <Add onClick={() => handleQuantity("inc")} />
                         </AmountContainer>
-                        <Button>ADD TO CART</Button>
+                        <Button  onClick={handleClick}>ADD TO CART</Button>
                     </AddContainer>
                 </InfoContainer>
             </Wrapper>
