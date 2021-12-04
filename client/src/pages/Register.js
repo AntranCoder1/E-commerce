@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { mobile } from '../responsive';
+import { useHistory } from 'react-router-dom';
+import { publicRequest } from '../requestMethod';
 
 const Container = styled.div`
     width: 100vw;
@@ -57,22 +59,72 @@ const Agreement = styled.span`
 `;
 
 const Register = () => {
+
+    const [name, setName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [username, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const history = useHistory();
+
+    const nameRef = useRef();
+    const lastNameRef = useRef();
+    const usernameRef = useRef();
+    const emailRef = useRef();
+    const passwordRef = useRef();
+    const confirmPasswordRef = useRef();
+
+    const handleClick = async (e) => {
+        e.preventDefault();
+        setName(nameRef.current.value);
+        setLastName(lastNameRef.current.value);
+        setUserName(usernameRef.current.value);
+        setEmail(emailRef.current.value);
+        setPassword(passwordRef.current.value);
+        setConfirmPassword(confirmPasswordRef.current.value);
+        try {
+            await publicRequest.post("/auth/register", { name, lastName, username, email, password, confirmPassword });
+            history.push("/login")
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <Container>
             <Wrapper>
                 <Title>CREATE AN ACCOUNT</Title>
                 <Form>
-                    <Input placeholder="name" />
-                    <Input placeholder="last name" />
-                    <Input placeholder="username" />
-                    <Input placeholder="email" />
-                    <Input placeholder="password" />
-                    <Input placeholder="confirm password" />
+                    <Input 
+                        placeholder="name"
+                        ref={nameRef}
+                    />
+                    <Input 
+                        placeholder="last name" 
+                        ref={lastNameRef}
+                    />
+                    <Input 
+                        placeholder="username" 
+                        ref={usernameRef}
+                    />
+                    <Input 
+                        placeholder="email" 
+                        ref={emailRef}
+                    />
+                    <Input 
+                        placeholder="password" 
+                        ref={passwordRef}
+                    />
+                    <Input 
+                        placeholder="confirm password" 
+                        ref={confirmPasswordRef}
+                    />
                     <Agreement>
                         By creating an account, I consent to the processing of my personal
                         data in accordance with the <b>PRIVACY POLICY</b>
                     </Agreement>
-                    <Button>CREATE</Button>
+                    <Button onClick={handleClick}>CREATE</Button>
                 </Form>
             </Wrapper>
         </Container>
