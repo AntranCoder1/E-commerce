@@ -64,6 +64,10 @@ const Link = styled.a`
     cursor: pointer;
 `;
 
+const Error = styled.span`
+    color: red;
+`;
+
 const Login = () => {
 
     const [username, setUserName] = useState("");
@@ -90,7 +94,7 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <Button onClick={handleClick} disabled={isFetching}>LOGIN</Button>
-                    { error && <p style={{ color: "red" }}>Something went wrong...</p> }
+                    { error && <Error>Something went wrong...</Error> }
                     <Link>DO NOT YOU REMEMBER THE PASSOWRD?</Link>
                     <Link>CREATE A NEW ACCOUNT</Link>
                 </Form>
