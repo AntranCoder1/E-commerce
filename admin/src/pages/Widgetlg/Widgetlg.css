@@ -42,19 +42,20 @@
     padding: 5px 7px;
     border: none;
     border-radius: 10px;
+    cursor: pointer;
 }
 
-.widgetlgButton.Approved {
+.widgetlgButton.approved {
     background-color: #e5faf2;
     color: #3bb077;
 }
 
-.widgetlgButton.Declined {
+.widgetlgButton.declined {
     background-color: #fff0f1;
     color: #d95087;
 }
 
-.widgetlgButton.Pending {
+.widgetlgButton.pending {
     background-color: #ebf1fe;
     color: #2a7ade;
 }

@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Widgetlg.css';
+import { userRequest } from '../../requestMethod';
+import { format } from 'timeago.js';
 
 const Widgetlg = () => {
+
+    const [order, setOrder] = useState([]);
+
+    useEffect(() => {
+        const getOrder = async () => {
+            try {
+                const res = await userRequest.get("/orders");
+                setOrder(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getOrder();
+    },[]);
 
     const Button = ({ type }) => {
         return <button className={"widgetlgButton " + type}>{type}</button>
@@ -17,51 +33,23 @@ const Widgetlg = () => {
                     <th className="widgetlgTh">Amount</th>
                     <th className="widgetlgTh">Status</th>
                 </tr>
-
-                <tr className="widgetlgTr">
-                    <td className="widgetlgUser">
-                        <img src="https://i.pinimg.com/564x/db/ed/1a/dbed1aa7eb42f356978b909dccd31e9b.jpg" alt="" className="widgetlgImg" />
-                        <span className="widgetlgName">Susan Carol</span>
-                    </td>
-                    <td className="widgetlgDate">2 Jun 2021</td>
-                    <td className="widgetlgAmount">$122.00</td>
-                    <td className="widgetlgStatus">
-                        <Button type="Approved"/>
-                    </td>
-                </tr>
-                <tr className="widgetlgTr">
-                    <td className="widgetlgUser">
-                        <img src="https://i.pinimg.com/564x/db/ed/1a/dbed1aa7eb42f356978b909dccd31e9b.jpg" alt="" className="widgetlgImg" />
-                        <span className="widgetlgName">Susan Carol</span>
-                    </td>
-                    <td className="widgetlgDate">2 Jun 2021</td>
-                    <td className="widgetlgAmount">$122.00</td>
-                    <td className="widgetlgStatus">
-                        <Button type="Declined"/>
-                    </td>
-                </tr>
-                <tr className="widgetlgTr">
-                    <td className="widgetlgUser">
-                        <img src="https://i.pinimg.com/564x/db/ed/1a/dbed1aa7eb42f356978b909dccd31e9b.jpg" alt="" className="widgetlgImg" />
-                        <span className="widgetlgName">Susan Carol</span>
-                    </td>
-                    <td className="widgetlgDate">2 Jun 2021</td>
-                    <td className="widgetlgAmount">$122.00</td>
-                    <td className="widgetlgStatus">
-                        <Button type="Pending"/>
-                    </td>
-                </tr>
-                <tr className="widgetlgTr">
-                    <td className="widgetlgUser">
-                        <img src="https://i.pinimg.com/564x/db/ed/1a/dbed1aa7eb42f356978b909dccd31e9b.jpg" alt="" className="widgetlgImg" />
-                        <span className="widgetlgName">Susan Carol</span>
-                    </td>
-                    <td className="widgetlgDate">2 Jun 2021</td>
-                    <td className="widgetlgAmount">$122.00</td>
-                    <td className="widgetlgStatus">
-                        <Button type="Approved"/>
-                    </td>
-                </tr>
+                { order.map(item => (
+                    <tr className="widgetlgTr" key={item._id}>
+                        <td className="widgetlgUser">
+                            <img 
+                                src="https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif" 
+                                alt="" 
+                                className="widgetlgImg" 
+                            />
+                            <span className="widgetlgName">{item.userId}</span>
+                        </td>
+                        <td className="widgetlgDate">{format(item.createdAt)}</td>
+                        <td className="widgetlgAmount">${item.amount}</td>
+                        <td className="widgetlgStatus">
+                            <Button type={item.status}/>
+                        </td>
+                    </tr>
+                )) }
             </table>
         </div>
     )
