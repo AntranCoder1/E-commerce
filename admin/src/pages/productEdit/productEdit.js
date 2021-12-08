@@ -1,11 +1,22 @@
 import React from 'react';
+import './productEdit.css';
 import { Link } from 'react-router-dom';
 import Chart from '../chart/Chart';
 import { productData } from '../../data';
 import './productEdit.css';
 import { Publish } from '@material-ui/icons';
+import { useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
 
-const productEdit = () => {
+const ProductEdit = () => {
+
+    const location = useLocation();
+    const productId = location.pathname.split('/')[2];
+    const product = useSelector((state) => 
+        state.product.products.find((item) => item._id === productId)
+    );
+    console.log(product.inStock)
+
     return (
         <div className="productEdit">
             <div className="productEditContainer">
@@ -20,25 +31,21 @@ const productEdit = () => {
                 </div>
                 <div className="productEditTopRight">
                     <div className="productEditInfoTop">
-                        <img src="https://i.pinimg.com/564x/03/d7/c4/03d7c44f97b9b40facec6064df85107c.jpg" alt="" className="productEditImg" />
-                        <span className="productEditName">buttermilk pancakes</span>
+                        <img src={product.img} alt="" className="productEditImg" />
+                        <span className="productEditName">{product.title}</span>
                     </div>
                     <div className="productEditInfoBottom">
                         <div className="productEditInfoItem">
-                            <div className="productEditInfoKey">id:</div>
-                            <div className="productEditInfoValue">123</div>
+                            <div className="productEditInfoKey">id: </div>
+                            <div className="productEditInfoValue">{product._id}</div>
                         </div>
                         <div className="productEditInfoItem">
-                            <div className="productEditInfoKey">sales:</div>
+                            <div className="productEditInfoKey">sales: </div>
                             <div className="productEditInfoValue">5123</div>
                         </div>
                         <div className="productEditInfoItem">
-                            <div className="productEditInfoKey">active:</div>
-                            <div className="productEditInfoValue">yes</div>
-                        </div>
-                        <div className="productEditInfoItem">
-                            <div className="productEditInfoKey">in stock:</div>
-                            <div className="productEditInfoValue">no</div>
+                            <span className="productInfoKey">inStock: </span>
+                            <span className="productInfoValue">{product.inStock}</span>
                         </div>
                     </div>
                 </div>
@@ -47,22 +54,20 @@ const productEdit = () => {
                 <form className="productEditForm">
                     <div className="productEditFormLeft">
                         <label>Product Name</label>
-                        <input type="text" placeholder="" />
+                        <input type="text" placeholder={product.title} />
+                        <label>Description</label>
+                        <input type="text" placeholder={product.desc} />
+                        <label>Price</label>
+                        <input type="text" placeholder={product.price} />
                         <label>In Stock</label>
                         <select name="inStock" id="idStock">
-                            <option value="yes">Yes</option>
-                            <option vlaue="no">No</option>
-                        </select>
-
-                        <label>Active</label>
-                        <select name="active" id="idActive">
-                            <option value="yes">Yes</option>
-                            <option vlaue="no">No</option>
+                            <option value="true">Yes</option>
+                            <option vlaue="false">No</option>
                         </select>
                     </div>
                     <div className="productEditFormRight">
                         <div className="productEditUpload">
-                            <img src="https://i.pinimg.com/564x/03/d7/c4/03d7c44f97b9b40facec6064df85107c.jpg" alt="" className="productEditUploadImg" />
+                            <img src={product.img} alt="" className="productEditUploadImg" />
                             <label for="file">
                                 <Publish />
                             </label>
@@ -76,4 +81,4 @@ const productEdit = () => {
     )
 }
 
-export default productEdit
+export default ProductEdit
