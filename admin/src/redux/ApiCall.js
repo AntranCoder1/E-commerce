@@ -49,18 +49,18 @@ export const updateProducts = async (id, product, dispatch) => {
     dispatch(updateProductStart());
     try {
         const res = await userRequest.put(`/products/${id}`, product);
-        dispatch(updateProductSuccess(res.data));
+        dispatch(updateProductSuccess(id, res.data));
     } catch (error) {
         dispatch(updateProductFailure());
     }
 }
 
-export const addProducts = async (dispatch, product) => {
+export const addProducts = async (product, dispatch) => {
     dispatch(addProductStart());
     try {
         const res = await userRequest.post(`/products`, product);
         dispatch(addProductSuccess(res.data));
-    } catch (error) {
+    } catch (err) {
         dispatch(addProductFailure());
     }
 }
