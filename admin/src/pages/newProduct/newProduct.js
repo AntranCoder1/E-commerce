@@ -1,7 +1,24 @@
-import React from 'react';
-import './newProduct.css';
+import React, { useState } from 'react';
+import './NewProduct.css';
 
-const newProduct = () => {
+const NewProduct = () => {
+
+    const [input, setInput] = useState({});
+    const [file, setFile] = useState(null);
+    const [cat, setCat] = useState([]);
+
+    const handleChange = (e) => {
+        setInput(prev => {
+            return { ...prev, [e.target.name]: e.target.value }
+        })
+    }
+
+    const handleCat = (e) => {
+        setCat(e.target.value.split(","));
+    }
+
+    console.log(cat)
+
     return (
         <div className="newProduct">
             <h1 className="addProductTitle">New Product</h1>
@@ -11,6 +28,7 @@ const newProduct = () => {
                     <input 
                         type="file" 
                         id="file"
+                        onChange={(e) => setFile(e.target.files[0])}
                     />
                 </div>
                 <div className="addProductItem">
@@ -19,6 +37,7 @@ const newProduct = () => {
                         name="title"
                         type="text" 
                         placeholder="Title..." 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="addProductItem">
@@ -27,6 +46,7 @@ const newProduct = () => {
                         name="desc"
                         type="text" 
                         placeholder="Description..." 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="addProductItem">
@@ -35,6 +55,7 @@ const newProduct = () => {
                         name="price"
                         type="number" 
                         placeholder="Price..." 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="addProductItem">
@@ -42,11 +63,12 @@ const newProduct = () => {
                     <input 
                         type="text"
                         placeholder=""
+                        onChange={handleCat}
                     />
                 </div>
                 <div className="addProductItem">
                     <label>Stock</label>
-                    <select name="inStock">
+                    <select name="inStock" onChange={handleChange}>
                         <option value="true">Yes</option>
                         <option value="false">No</option>
                     </select>
@@ -57,4 +79,4 @@ const newProduct = () => {
     )
 }
 
-export default newProduct
+export default NewProduct
