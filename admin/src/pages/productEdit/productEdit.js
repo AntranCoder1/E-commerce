@@ -1,21 +1,58 @@
-import React from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './productEdit.css';
 import { Link } from 'react-router-dom';
 import Chart from '../chart/Chart';
-import { productData } from '../../data';
 import './productEdit.css';
 import { Publish } from '@material-ui/icons';
 import { useLocation } from 'react-router';
 import { useSelector } from 'react-redux';
+import { userRequest } from '../../requestMethod';
 
 const ProductEdit = () => {
 
     const location = useLocation();
     const productId = location.pathname.split('/')[2];
+    const [pStats, setPstats] = useState([]);
+
     const product = useSelector((state) => 
         state.product.products.find((item) => item._id === productId)
     );
-    console.log(product.inStock)
+    
+    const MONTHS = useMemo(
+        () => [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Agu",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+        []
+    );
+
+    useEffect(() => {
+        const getStats = async () => {
+            try {
+                const res = await userRequest.get("/orders/income?pid=" + productId);
+                const list = res.data.sort((a, b) => {
+                    return a._id - b._id
+                })
+                list.map((item) =>
+                    setPstats((prev) => [
+                        ...prev,
+                        { name: MONTHS[item._id - 1], Sales: item.total },
+                    ])
+                );
+            } catch {}
+        };
+        getStats();
+    }, [productId, MONTHS]);
 
     return (
         <div className="productEdit">
@@ -27,7 +64,7 @@ const ProductEdit = () => {
             </div>
             <div className="productEditTop">
                 <div className="productEditTopLeft">
-                    <Chart title="Sales Performance" data={productData} grid datakey="sales" />
+                    <Chart title="Sales Performance" data={pStats} grid datakey="Sales" />
                 </div>
                 <div className="productEditTopRight">
                     <div className="productEditInfoTop">
