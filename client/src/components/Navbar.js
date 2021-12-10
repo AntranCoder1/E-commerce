@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from '../redux/UserRedux';
 
 const Container = styled.div`
     height: 60px;
@@ -72,6 +74,11 @@ const Navbar = () => {
 
     const quantity = useSelector(state => state.cart.quantity);
     const user= useSelector(state => state.user.currentUser);
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        dispatch(logout())
+    }
 
     return (
         <Container>
@@ -89,8 +96,8 @@ const Navbar = () => {
                 <Right>
                     { user ? (
                         <>
-                            <MenuItem style={{ textTransform: "uppercase" }}>{user.username}</MenuItem>
-                            <MenuItem>LOGOUT</MenuItem>
+                            <MenuItem style={{ textTransform: "uppercase" }}>{user.fullname}</MenuItem>
+                            <MenuItem onClick={handleLogout}>LOGOUT</MenuItem>
                         </>
                     ) : (
                         <>

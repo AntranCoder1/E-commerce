@@ -181,7 +181,8 @@ const Cart = () => {
                     amount: 500,
                 });
                 history.push("/success", {
-                    stripeData: res.data
+                    stripeData: res.data,
+                    products: cart,
                 })
             } catch (error) {}
         }

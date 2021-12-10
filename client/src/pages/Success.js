@@ -1,5 +1,6 @@
 import React from 'react';
-import { useLocation } from 'react-router';  
+import { useLocation } from 'react-router'; 
+import { Link } from 'react-router-dom'; 
 
 const Success = () => {
 
@@ -16,7 +17,9 @@ const Success = () => {
                 justifyContent: "center",
             }}
         >
-            <button style={{ padding: 10, marginTop: 20 }}>Go to Homepage</button>
+            <Link to="/" style={{ cursor: "pointer" }}>
+                <button style={{ padding: 10, marginTop: 20 }}>Go to Homepage</button>
+            </Link>
         </div>
     )
 }
