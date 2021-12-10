@@ -1,10 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './userCreate.css';
 import { addUsers } from '../../redux/ApiCall';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL
+} from 'firebase/storage';
+import app from '../../filebase';
 
-const userCreate = () => {
+const UserCreate = () => {
+
+    const [input, setInput] = useState({});
+    const [file, setFile] = useState(null);
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const handleChange = (e) => {
+        setInput(prev => {
+            return { ...prev, [e.target.name]: e.target.value }
+        })
+    }
+
+    const handleClick = (e) => {
+        e.preventDefault();
+        const fileName = new Date().getTime() + file.name;
+        const storage = getStorage(app);
+        const storageRef = ref(storage, fileName);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                // Observe state change events such as progress, pause, and resume
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress =(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+                switch (snapshot.state) {
+                case "paused":
+                    console.log("Upload is paused");
+                    break;
+                case "running":
+                    console.log("Upload is running");
+                    break;
+                default:
+                }
+            },
+            (error) => {
+                // Handle unsuccessful uploads
+            },
+            () => {
+                // Handle successful uploads on complete
+                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    const user = { ...input, img: downloadURL };
+                    addUsers(user, dispatch);
+                    history.push("/users");
+                });
+            }
+        );
+    }
+
     return (
         <div className="userCreate">
             <h1 className="userCreateTitle">New User</h1>
@@ -15,6 +77,7 @@ const userCreate = () => {
                         type="text" 
                         name="username"
                         placeholder="username" 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="createUserItem">
@@ -23,6 +86,7 @@ const userCreate = () => {
                         type="text" 
                         name="fullname"
                         placeholder="full name" 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="createUserItem">
@@ -31,6 +95,7 @@ const userCreate = () => {
                         type="text" 
                         name="email"
                         placeholder="email" 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="createUserItem">
@@ -39,6 +104,7 @@ const userCreate = () => {
                         type="text" 
                         name="password"
                         placeholder="password" 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="createUserItem">
@@ -47,6 +113,7 @@ const userCreate = () => {
                         type="text" 
                         name="phone"
                         placeholder="phone" 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="createUserItem">
@@ -55,6 +122,7 @@ const userCreate = () => {
                         type="text" 
                         name="address"
                         placeholder="address" 
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="createUserItem">
@@ -70,7 +138,12 @@ const userCreate = () => {
                 </div>
                 <div className="createUserItem">
                     <label>Admin</label>
-                    <select className="userCreateSelect" name="isAdmin" id="admin">
+                    <select 
+                        className="userCreateSelect" 
+                        name="isAdmin" 
+                        id="admin"
+                        onChange={handleChange}
+                    >
                         <option value="true">Yes</option>
                         <option value="false">No</option>
                     </select>
@@ -80,13 +153,18 @@ const userCreate = () => {
                     <input 
                         type="file" 
                         id="file"
-                        // onChange={(e) => setFile(e.target.files[0])}
+                        onChange={(e) => setFile(e.target.files[0])}
                     />
                 </div>
-                <button className="userCreateButton">Create</button>
+                <button 
+                    className="userCreateButton"
+                    onClick={handleClick}
+                >
+                    Create
+                </button>
             </form>
         </div>
     )
 }
 
-export default userCreate
+export default UserCreate

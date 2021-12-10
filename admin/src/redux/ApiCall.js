@@ -21,6 +21,9 @@ import {
     addUserStart,
     addUserSuccess,
     addUserFailure,
+    deleteUserStart,
+    deleteUserSuccess,
+    deleteUserFailure,
 } from './GetUserRedux';
 
 export const login = async (dispatch, user) => {
@@ -86,9 +89,19 @@ export const getUsers = async (dispatch) => {
 export const addUsers = async (user, dispatch) => {
     dispatch(addUserStart());
     try {
-        const res = await userRequest.post(`/users`, user);
-        dispatch(addProductSuccess(res.data));
+        const res = await userRequest.post(`/auth/register`, user);
+        dispatch(addUserSuccess(res.data));
     } catch (err) {
         dispatch(addUserFailure());
+    }
+}
+
+export const deleteUsers = async (id, dispatch) => {
+    dispatch(deleteUserStart());
+    try {
+        await userRequest.delete(`/users/${id}`);
+        dispatch(deleteUserSuccess(id));
+    } catch (error) {
+        dispatch(deleteUserFailure());
     }
 }
