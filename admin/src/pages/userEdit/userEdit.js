@@ -1,5 +1,5 @@
-import React from 'react';
-import './userEdit.css';
+import React, { useState } from 'react';
+import './UserEdit.css';
 import { 
     CalendarToday, 
     LocationSearching, 
@@ -8,9 +8,18 @@ import {
     PhoneAndroid, 
     Publish 
 } from '@material-ui/icons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const userEdit = () => {
+const UserEdit = () => {
+
+    const location = useLocation();
+    const userId = location.pathname.split("/")[2];
+
+    const user = useSelector(state => 
+        state.users.users.find((item) => item._id === userId)
+    );
+
     return (
         <div className="userEdit">
             <div className="userTitleContainer">
@@ -23,20 +32,19 @@ const userEdit = () => {
                 <div className="userShow">
                     <div className="userShowTop">
                         <img 
-                            src="https://i.pinimg.com/564x/6e/01/d9/6e01d9ca9ba8b56ec52d1634fae3c233.jpg"
+                            src={user.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}
                             alt=""
                             className="userShowImg"
                         />
                         <div className="userShowTopTitle">
-                            <span className="userShowUserName">Jon Snow</span>
-                            <span className="userShowUserTitle">Software Engineer</span>
+                            <span className="userShowUserName">{user.username}</span>
                         </div>
                     </div>
                     <div className="userShowBottom">
                         <span className="userShowTitle">Account Detail</span>
                         <div className="userShowInfo">
                             <PermIdentity className="userShowIcon" />
-                            <span className="userShowInfoTitle">Jon Snow</span>
+                            <span className="userShowInfoTitle">{user.username}</span>
                         </div>
                         <div className="userShowInfo">
                             <CalendarToday className="userShowIcon" />
@@ -49,11 +57,11 @@ const userEdit = () => {
                         </div>
                         <div className="userShowInfo">
                             <MailOutline className="userShowIcon" />
-                            <span className="userShowInfoTitle">jon@gmail.com</span>
+                            <span className="userShowInfoTitle">{user.email}</span>
                         </div>
                         <div className="userShowInfo">
                             <LocationSearching className="userShowIcon" />
-                            <span className="userShowInfoTitle">New York | USA</span>
+                            <span className="userShowInfoTitle">HCM | VN</span>
                         </div>
                     </div>
                 </div>
@@ -65,7 +73,7 @@ const userEdit = () => {
                                 <label>Username</label>
                                 <input 
                                     type="text" 
-                                    placeholder="" 
+                                    placeholder={user.username} 
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -73,7 +81,7 @@ const userEdit = () => {
                                 <label>Full Name</label>
                                 <input 
                                     type="text" 
-                                    placeholder="" 
+                                    placeholder={user.username}
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -81,7 +89,7 @@ const userEdit = () => {
                                 <label>Email</label>
                                 <input 
                                     type="text" 
-                                    placeholder="" 
+                                    placeholder={user.email}
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -89,7 +97,7 @@ const userEdit = () => {
                                 <label>Phone</label>
                                 <input 
                                     type="text" 
-                                    placeholder="" 
+                                    placeholder="0982106287" 
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -97,7 +105,7 @@ const userEdit = () => {
                                 <label>Address</label>
                                 <input 
                                     type="text" 
-                                    placeholder="" 
+                                    placeholder="35/10/5 Phan Văn Hơn, q12" 
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -105,7 +113,7 @@ const userEdit = () => {
                         <div className="userUpdateRight">
                             <div className="userUpdateUpload">
                                 <img 
-                                    src="https://i.pinimg.com/564x/6e/01/d9/6e01d9ca9ba8b56ec52d1634fae3c233.jpg" 
+                                    src={user.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} 
                                     alt=""
                                     className="userUpdateImg"
                                 />
@@ -121,4 +129,5 @@ const userEdit = () => {
     )
 }
 
-export default userEdit
+export default UserEdit
+
