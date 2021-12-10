@@ -1,5 +1,8 @@
 import React from 'react';
 import './userCreate.css';
+import { addUsers } from '../../redux/ApiCall';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 const userCreate = () => {
     return (
@@ -8,27 +11,51 @@ const userCreate = () => {
             <form className="userCreateForm">
                 <div className="createUserItem">
                     <label className="">Username</label>
-                    <input type="text" placeholder="username" />
+                    <input 
+                        type="text" 
+                        name="username"
+                        placeholder="username" 
+                    />
                 </div>
                 <div className="createUserItem">
                     <label className="">Full Name</label>
-                    <input type="text" placeholder="full name" />
+                    <input 
+                        type="text" 
+                        name="fullname"
+                        placeholder="full name" 
+                    />
                 </div>
                 <div className="createUserItem">
                     <label className="">Email</label>
-                    <input type="text" placeholder="email" />
+                    <input 
+                        type="text" 
+                        name="email"
+                        placeholder="email" 
+                    />
                 </div>
                 <div className="createUserItem">
                     <label className="">Password</label>
-                    <input type="text" placeholder="password" />
+                    <input 
+                        type="text" 
+                        name="password"
+                        placeholder="password" 
+                    />
                 </div>
                 <div className="createUserItem">
                     <label className="">Phone</label>
-                    <input type="text" placeholder="phone" />
+                    <input 
+                        type="text" 
+                        name="phone"
+                        placeholder="phone" 
+                    />
                 </div>
                 <div className="createUserItem">
                     <label className="">Address</label>
-                    <input type="text" placeholder="address" />
+                    <input 
+                        type="text" 
+                        name="address"
+                        placeholder="address" 
+                    />
                 </div>
                 <div className="createUserItem">
                     <label className="">Gender</label>
@@ -42,11 +69,19 @@ const userCreate = () => {
                     </div>
                 </div>
                 <div className="createUserItem">
-                    <label>Active</label>
-                    <select className="userCreateSelect" name="active" id="active">
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
+                    <label>Admin</label>
+                    <select className="userCreateSelect" name="isAdmin" id="admin">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
                     </select>
+                </div>
+                <div className="createUserItem">
+                    <label>Image</label>
+                    <input 
+                        type="file" 
+                        id="file"
+                        // onChange={(e) => setFile(e.target.files[0])}
+                    />
                 </div>
                 <button className="userCreateButton">Create</button>
             </form>
