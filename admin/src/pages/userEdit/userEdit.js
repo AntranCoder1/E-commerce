@@ -44,7 +44,7 @@ const UserEdit = () => {
                         <span className="userShowTitle">Account Detail</span>
                         <div className="userShowInfo">
                             <PermIdentity className="userShowIcon" />
-                            <span className="userShowInfoTitle">{user.username}</span>
+                            <span className="userShowInfoTitle">{user.fullname}</span>
                         </div>
                         <div className="userShowInfo">
                             <CalendarToday className="userShowIcon" />
@@ -53,7 +53,7 @@ const UserEdit = () => {
                         <span className="userShowTitle">Contact Detail</span>
                         <div className="userShowInfo">
                             <PhoneAndroid className="userShowIcon" />
-                            <span className="userShowInfoTitle">+84 123 456 789</span>
+                            <span className="userShowInfoTitle">+84 {user.phone}</span>
                         </div>
                         <div className="userShowInfo">
                             <MailOutline className="userShowIcon" />
@@ -81,7 +81,7 @@ const UserEdit = () => {
                                 <label>Full Name</label>
                                 <input 
                                     type="text" 
-                                    placeholder={user.username}
+                                    placeholder={user.fullname}
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -97,7 +97,7 @@ const UserEdit = () => {
                                 <label>Phone</label>
                                 <input 
                                     type="text" 
-                                    placeholder="0982106287" 
+                                    placeholder={user.phone} 
                                     className="userUpdateInput"
                                 />
                             </div>
